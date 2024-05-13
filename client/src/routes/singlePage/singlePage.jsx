@@ -27,6 +27,31 @@ function SinglePage() {
     }
   };
 
+
+  const handleSendMessage = async () => {
+    try {
+      console.log("Post object:", post);
+      
+      const receiverId = post.userId;
+      
+      if (!receiverId) {
+        console.error("Receiver ID is missing or invalid");
+        return;
+      }
+      
+      const response = await apiRequest.post("/chats", {
+        receiverId: receiverId,
+      });
+  
+      navigate("/profile");
+    } catch (error) {
+      console.error("Failed to create chat:", error);
+    }
+  };
+  
+  
+  
+
   return (
     <div className="singlePage">
       <div className="details">
@@ -139,7 +164,7 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
+            <button onClick={handleSendMessage} >
               <img src="/chat.png" alt="" />
               Send a Message
             </button>
