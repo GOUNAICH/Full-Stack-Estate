@@ -191,7 +191,7 @@ function SinglePage() {
                 backgroundColor: saved ? "#fece51" : "white",
               }}
             >
-              <img src="/delete.png" alt="" />
+              <img src="/save.png" alt="" />
               {saved ? "Place Saved" : "Save the Place"}
             </button>
 
