@@ -6,12 +6,15 @@ import DOMPurify from "dompurify";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import { Link } from "react-router-dom";
+
 
 function SinglePage() {
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  
 
   const handleSave = async () => {
     if (!currentUser) {
@@ -30,29 +33,41 @@ function SinglePage() {
 
   const handleSendMessage = async () => {
     try {
-      
+
       const existingChatResponse = await apiRequest.get("/chats");
       const existingChat = existingChatResponse.data.find(chat => chat.userIDs.includes(post.userId));
-      
+
       if (existingChat) {
-        
+
         alert("You already have a chat with the owner of this post.");
       } else {
-        
+
         const response = await apiRequest.post("/chats", {
           receiverId: post.userId,
         });
-        
+
         navigate("/profile");
       }
     } catch (error) {
       console.error("Failed to create or check chat:", error);
     }
   };
-  
-  
-  
-  
+
+
+  const handleDeletePost = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+      try {
+        await apiRequest.delete(`/posts/${post.id}`);
+        alert("Post deleted successfully.");
+        navigate("/profile");
+      } catch (error) {
+        console.error("Failed to delete post:", error);
+      }
+    }
+  };
+
+
 
   return (
     <div className="singlePage">
@@ -176,9 +191,25 @@ function SinglePage() {
                 backgroundColor: saved ? "#fece51" : "white",
               }}
             >
-              <img src="/save.png" alt="" />
+              <img src="/delete.png" alt="" />
               {saved ? "Place Saved" : "Save the Place"}
             </button>
+
+            <Link to={`/update-post/${post.id}`}>
+              <button>
+                <img src="/update.png" alt="" />
+                Update Post
+              </button>
+            </Link>
+
+
+
+            <button onClick={handleDeletePost}>
+              <img src="/delete.png" alt="" />
+              Delete Post
+            </button>
+
+
           </div>
         </div>
       </div>
