@@ -30,19 +30,19 @@ function SinglePage() {
 
   const handleSendMessage = async () => {
     try {
-      // Check if a chat already exists between the current user and the post owner
+      
       const existingChatResponse = await apiRequest.get("/chats");
       const existingChat = existingChatResponse.data.find(chat => chat.userIDs.includes(post.userId));
       
       if (existingChat) {
-        // Chat already exists, show a message
+        
         alert("You already have a chat with the owner of this post.");
       } else {
-        // Chat doesn't exist, create a new one
+        
         const response = await apiRequest.post("/chats", {
-          receiverId: post.userId, // Assuming post.userId is the receiver's ID
+          receiverId: post.userId,
         });
-        // Redirect to the profile page where the user can start chatting
+        
         navigate("/profile");
       }
     } catch (error) {
